@@ -2,11 +2,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Test') {
+        stage('Stage 1: Hello') {
             steps {
-                echo "Hello World from Jenkins Test Pipeline!"
-                echo "This is a test message from Lahcen's pipeline!"
+                echo "Hello World from Stage 1!"
+            }
+        }
+
+        stage('Stage 2: Test') {
+            steps {
+                echo "This is Stage 2: another test message!"
             }
         }
     }
 }
+
