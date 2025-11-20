@@ -2,21 +2,33 @@ pipeline {
     agent any
 
     environment {
+        // SonarQube server URL (inside Docker Compose network)
         SONAR_HOST_URL = 'http://sonarqube:9000'
-        SONAR_TOKEN = credentials('sonar') // 'sonar' = the Jenkins credential ID you created
+        // Jenkins credential ID for your SonarQube token
+        SONAR_TOKEN = credentials('sonar') 
     }
 
+
     stages {
-        stage('Hello') {
+        stage('Stage 1: Hello') {
             steps {
                 echo "Hello World from Stage 1!"
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('Stage 2: SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') { // must match the SonarQube server name in Jenkins
-                    sh "sonar-scanner -Dsonar.projectKey=my-project -Dsonar.sources=. -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}"
+                script {
+                    // Use the SonarQube environment configured in Jenkins
+                    withSonarQubeEnv('SonarQube') { 
+                        sh """
+                            sonar-scanner \
+                            -Dsonar.projectKey=my-project \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.login=${SONAR_TOKEN}
+                        """
+                    }
                 }
             }
         }
@@ -24,7 +36,7 @@ pipeline {
 
     post {
         always {
-            echo "Pipeline!!! finished!"
+            echo "Pipeline finished!"
         }
     }
 }
