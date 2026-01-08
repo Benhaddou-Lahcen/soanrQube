@@ -30,7 +30,7 @@ pipeline {
                             ${tool 'Maven'}/bin/mvn sonar:sonar \
                             -Dsonar.projectKey=soanrQube \
                             -Dsonar.host.url=$SONAR_HOST_URL \
-                            -Dsonar.login=$SONAR_TOKEN
+                            -Dsonar.login=$SONAR_TOKEN 
                         """
                     }
                 }
