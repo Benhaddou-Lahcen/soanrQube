@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // SonarQube server URL (dans ton réseau Docker Compose)
-        SONAR_HOST_URL = 'https://sonar.lahcenbenhaddou.me'
+        SONAR_HOST_URL = 'http://sonarqube:9000'
         // Jenkins credential ID pour le jeton SonarQube
         SONAR_TOKEN = credentials('sonar')
     }
