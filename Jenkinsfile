@@ -2,24 +2,22 @@ pipeline {
     agent any
 
     environment {
-        // URL interne du conteneur SonarQube dans ton réseau Docker
+        // URL interne Docker (SANS ESPACE)
         SONAR_HOST_URL = 'http://sonarqube:9000'
-        // Récupération sécurisée du jeton créé dans Jenkins
+        // Récupération de ton credential 'sonar'
         SONAR_TOKEN = credentials('sonar')
     }
 
     stages {
         stage('Stage 1: Checkout') {
             steps {
-                // Récupération de ton code depuis GitHub
                 checkout scm
             }
         }
 
         stage('Stage 2: Build') {
             steps {
-                echo 'Compilation du projet avec Maven...'
-                // Utilise l'outil Maven 3.9.12 configuré dans Jenkins
+                echo 'Compilation du projet...'
                 sh "${tool 'Maven'}/bin/mvn clean compile"
             }
         }
@@ -27,8 +25,8 @@ pipeline {
         stage('Stage 3: SonarQube Analysis') {
             steps {
                 script {
-                    // Injection de la configuration système SonarQube
                     withSonarQubeEnv('SonarQube') {
+                        // COMMANDE CRITIQUE : Zéro espace après le signe '='
                         sh """
                             ${tool 'Maven'}/bin/mvn sonar:sonar \
                             -Dsonar.projectKey=soanrQube \
