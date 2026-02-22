@@ -21,7 +21,7 @@ pipeline {
                 sh "${tool 'Maven'}/bin/mvn clean compile"
             }
         }
-
+ 
         stage('Stage 3: SonarQube Analysis') {
             steps {
                 script {
