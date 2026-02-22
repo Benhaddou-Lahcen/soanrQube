@@ -1,11 +1,8 @@
 pipeline {
     agent any
 
-    environment {
-        // URL interne Docker (SANS ESPACE)
-        SONAR_HOST_URL = 'http://sonarqube:9000'
-        // Récupération de ton credential 'sonar'
-        SONAR_TOKEN = credentials('sonar')
+    tools {
+        maven 'Maven'
     }
 
     stages {
@@ -17,23 +14,15 @@ pipeline {
 
         stage('Stage 2: Build') {
             steps {
-                echo 'Compilation du projet...'
-                sh "${tool 'Maven'}/bin/mvn clean compile"
+                sh 'mvn clean compile'
             }
         }
 
         stage('Stage 3: SonarQube Analysis') {
             steps {
-                script {
-                    withSonarQubeEnv('SonarQube') {
-                        // COMMANDE CRITIQUE : Zéro espace après le signe '='
-                        sh """
-                            ${tool 'Maven'}/bin/mvn sonar:sonar \
-                            -Dsonar.projectKey=soanrQube \
-                            -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.token=${SONAR_TOKEN}
-                        """
-                    }
+                // Jenkins utilise ici l'URL 'http://sonarqube:9000' du menu System
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=soanrQube'
                 }
             }
         }
@@ -41,7 +30,7 @@ pipeline {
 
     post {
         always {
-            echo "Pipeline terminé pour le projet de Lahcen !"
+            echo "Analyse terminée pour Lahcen !"
         }
     }
 }
